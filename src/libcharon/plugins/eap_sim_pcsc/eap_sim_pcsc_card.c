@@ -144,11 +144,13 @@ METHOD(simaka_card_t, get_triplet, bool,
 
 		/* See GSM 11.11 for SIM APDUs */
 		static const BYTE pbSelectMF[] = { 0xa0, 0xa4, 0x00, 0x00, 0x02, 0x3f, 0x00 };
-		static const BYTE pbSelectDFGSM[] = { 0xa0, 0xa4, 0x00, 0x00, 0x02, 0x7f, 0x20 };
 		static const BYTE pbSelectIMSI[] = { 0xa0, 0xa4, 0x00, 0x00, 0x02, 0x6f, 0x07 };
 		static const BYTE pbReadBinary[] = { 0xa0, 0xb0, 0x00, 0x00, 0x09 };
 		BYTE pbRunGSMAlgorithm[5 + SIM_RAND_LEN] = { 0xa0, 0x88, 0x00, 0x00, 0x10 };
 		static const BYTE pbGetResponse[] = { 0xa0, 0xc0, 0x00, 0x00, 0x0c };
+
+		/* 31.11 for USIM APDUs */
+		static const BYTE pbSelectADFUSIM[] = { 0xa0, 0xa4, 0x00, 0x00, 0x02, 0x7f, 0xf0 };
 
 		/* If on 2nd or later reader, make sure we end the transaction
 		 * and disconnect card in the previous reader */
@@ -215,9 +217,9 @@ METHOD(simaka_card_t, get_triplet, bool,
 			continue;
 		}
 
-		/* APDU: Select DF GSM */
+		/* APDU: Select ADF USIM */
 		dwRecvLength = sizeof(pbRecvBuffer);
-		rv = SCardTransmit(hCard, pioSendPci, pbSelectDFGSM, sizeof(pbSelectDFGSM),
+		rv = SCardTransmit(hCard, pioSendPci, pbSelectADFUSIM, sizeof(pbSelectADFUSIM),
 						   &pioRecvPci, pbRecvBuffer, &dwRecvLength);
 		if (rv != SCARD_S_SUCCESS)
 		{
