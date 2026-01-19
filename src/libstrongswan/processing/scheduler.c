@@ -328,7 +328,7 @@ scheduler_t * scheduler_create()
 	this->heap = (event_t**)calloc(this->heap_size + 1, sizeof(event_t*));
 
 	job = callback_job_create_with_prio((callback_job_cb_t)schedule, this,
-										NULL, return_false, JOB_PRIO_CRITICAL);
+										NULL, (void*)return_false, JOB_PRIO_CRITICAL);
 	lib->processor->queue_job(lib->processor, (job_t*)job);
 
 	return &this->public;
